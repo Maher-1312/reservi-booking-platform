@@ -27,29 +27,38 @@ export function useAuth() {
   const signIn = useCallback(async (email: string, password: string) => {
     try {
       const result = await blink.auth.signInWithEmail(email, password)
+      // Immediately sync user to store to avoid race with onAuthStateChanged
+      const currentUser = await blink.auth.me()
+      if (currentUser) setUser(currentUser)
       return { success: true, data: result }
     } catch (error: unknown) {
       return { success: false, error: error as AuthError }
     }
-  }, [])
+  }, [setUser])
 
   const signUp = useCallback(async (email: string, password: string) => {
     try {
       const result = await blink.auth.signUp({ email, password })
+      // Immediately sync user to store to avoid race with onAuthStateChanged
+      const currentUser = await blink.auth.me()
+      if (currentUser) setUser(currentUser)
       return { success: true, data: result }
     } catch (error: unknown) {
       return { success: false, error: error as AuthError }
     }
-  }, [])
+  }, [setUser])
 
   const signInWithGoogle = useCallback(async () => {
     try {
       const result = await blink.auth.signInWithGoogle()
+      // Immediately sync user to store to avoid race with onAuthStateChanged
+      const currentUser = await blink.auth.me()
+      if (currentUser) setUser(currentUser)
       return { success: true, data: result }
     } catch (error: unknown) {
       return { success: false, error: error as AuthError }
     }
-  }, [])
+  }, [setUser])
 
   const signOut = useCallback(async () => {
     await storeSignOut()
