@@ -192,16 +192,6 @@ export default function ProfileScreen() {
                 <Switch.Thumb />
               </Switch>
             }
-            onPress={() => {
-              const next = userType === 'owner' ? 'client' : 'owner'
-              setUserType(next)
-              toast.show(
-                next === 'owner'
-                  ? t('switch_to_owner_mode')
-                  : t('switch_to_client_mode'),
-                { preset: 'success' },
-              )
-            }}
           />
         </YStack>
 
