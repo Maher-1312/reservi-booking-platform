@@ -60,6 +60,17 @@ export function useAuth() {
     }
   }, [setUser])
 
+  const signInWithApple = useCallback(async () => {
+    try {
+      const result = await blink.auth.signInWithApple()
+      const currentUser = await blink.auth.me()
+      if (currentUser) setUser(currentUser)
+      return { success: true, data: result }
+    } catch (error: unknown) {
+      return { success: false, error: error as AuthError }
+    }
+  }, [setUser])
+
   const signOut = useCallback(async () => {
     await storeSignOut()
   }, [storeSignOut])
@@ -74,6 +85,7 @@ export function useAuth() {
     signIn,
     signUp,
     signInWithGoogle,
+    signInWithApple,
     signOut,
   }
 }

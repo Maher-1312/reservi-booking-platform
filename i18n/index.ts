@@ -203,10 +203,10 @@ const translations = {
     en: 'Continue with Google',
     ar: 'المتابعة مع جوجل',
   },
-  login_with_facebook: {
-    fr: 'Continuer avec Facebook',
-    en: 'Continue with Facebook',
-    ar: 'المتابعة مع فيسبوك',
+  login_with_apple: {
+    fr: 'Continuer avec Apple',
+    en: 'Continue with Apple',
+    ar: 'المتابعة مع آبل',
   },
   email_placeholder: {
     fr: 'votre@email.com',

@@ -19,6 +19,7 @@ import {
   Mail,
   Lock,
   Chrome,
+  Apple,
 } from '@blinkdotnew/mobile-ui'
 import { useAuth } from '@/hooks/useAuth'
 import { useTranslation } from '@/i18n'
@@ -28,7 +29,7 @@ type AuthMode = 'signin' | 'signup'
 
 export default function AuthScreen() {
   const { t } = useTranslation()
-  const { signIn, signUp, signInWithGoogle } = useAuth()
+  const { signIn, signUp, signInWithGoogle, signInWithApple } = useAuth()
 
   const [mode, setMode] = useState<AuthMode>('signin')
   const [email, setEmail] = useState('')
@@ -103,12 +104,29 @@ export default function AuthScreen() {
     }
   }, [signInWithGoogle, t])
 
-  const handleFacebookSignIn = useCallback(async () => {
-    toast.show(t('error'), {
-      message: 'Facebook sign-in coming soon',
-      preset: 'info',
-    })
-  }, [t])
+  const handleAppleSignIn = useCallback(async () => {
+    setSubmitting(true)
+    try {
+      const result = await signInWithApple()
+      if (result.success) {
+        const me = await blink.auth.me()
+        if (me?.display_name) {
+          router.back()
+        } else {
+          router.replace('/profile-setup')
+        }
+      } else {
+        toast.show(t('error'), {
+          message: result.error?.message ?? t('retry'),
+          preset: 'error',
+        })
+      }
+    } catch {
+      toast.show(t('error'), { message: t('retry'), preset: 'error' })
+    } finally {
+      setSubmitting(false)
+    }
+  }, [signInWithApple, t])
 
   return (
     <ScrollView
@@ -276,22 +294,13 @@ export default function AuthScreen() {
           <Button
             size="$5"
             width="100%"
-            backgroundColor="#1877F2"
-            onPress={handleFacebookSignIn}
+            backgroundColor="#000000"
+            onPress={handleAppleSignIn}
             disabled={submitting}
-            icon={
-              <SizableText
-                color="white"
-                fontWeight="900"
-                size="$6"
-                marginRight="$2"
-              >
-                f
-              </SizableText>
-            }
+            icon={<Apple size={20} color="white" />}
           >
             <SizableText color="white" fontWeight="600">
-              {t('login_with_facebook')}
+              {t('login_with_apple')}
             </SizableText>
           </Button>
         </YStack>
